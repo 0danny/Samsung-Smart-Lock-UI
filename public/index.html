@@ -6,12 +6,69 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Samsung Smart Track UI</title>
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- External Imports -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+
+    <script>
+        if (typeof module === 'object') {
+            window.module = module
+            module = undefined
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script>
+        if (window.module) module = window.module
+    </script>
+
 </head>
 
 <body>
 
 
+    <div class="top-bar">
 
+        <div class="top-bar-title-flex">
+            <i class="bi bi-door-open"></i>
+            <span>Samsung Smart Lock UI</span>
+        </div>
+
+        <div class="top-bar-controls-flex">
+            <div class="minimize-button">
+                <i class="bi bi-dash"></i>
+            </div>
+            <div class="close-button">
+                <i class="bi bi-x"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="main-content">
+        <i class="bi bi-list" id="side-menu-button"></i>
+
+
+
+    </div>
+
+    <div class="dark-overlay">
+
+    </div>
+
+    <div class="dialog-flex">
+        <div class="modal">
+            <div class="modal-title">Modal Title</div>
+
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript" src="js/main.js"></script>
 </body>
 
 </html>

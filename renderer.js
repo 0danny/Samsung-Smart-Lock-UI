@@ -1,8 +1,16 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 
+try {
+    require('electron-reloader')(module)
+} catch {
+    console.log("[Production] There was an error loading the electron reloader.")
+}
+
+let win
+
 function createWindow() {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         width: 460,
         height: 670,
         webPreferences: {
@@ -14,8 +22,16 @@ function createWindow() {
 
     win.webContents.toggleDevTools()
 
-    win.loadFile('index.html')
+    win.loadFile(path.resolve(__dirname, 'public/index.html'))
 }
+
+ipcMain.on('minimize', () => {
+    win.isMinimized() ? win.restore() : win.minimize()
+})
+
+ipcMain.on('close', () => {
+    win.close()
+})
 
 app.whenReady().then(() => {
     createWindow()
