@@ -49,20 +49,42 @@
     </div>
 
     <div class="main-content">
-        <i class="bi bi-list" id="side-menu-button"></i>
+        <div class="main-content-top">
+            <i class="bi bi-list" id="side-menu-button"></i>
+        </div>
 
+
+        <div class="door-controller-wrapper">
+            <div class="door-controller-animation"></div>
+            <div class="door-controller">Unlock</div>
+
+        </div>
 
 
     </div>
 
-    <div class="dark-overlay">
+    <div class="dialog-flex" style="pointer-events: none; opacity: 0;">
+        <div class="dark-overlay"></div>
 
-    </div>
-
-    <div class="dialog-flex">
         <div class="modal">
-            <div class="modal-title">Modal Title</div>
+            <div class="modal-title">Smart Lock</div>
+            <div class="main-modal-navigation">
+                <div class="main-modal-navitem">Account</div>
+                <div class="main-modal-navitem">Settings</div>
+                <div class="main-modal-navitem">Information</div>
+            </div>
 
+            <div class="main-modal-content" contentname="Account">
+
+            </div>
+
+            <div class="main-modal-content" contentname="Settings" style="display: none">
+                <h1>Settings</h1>
+            </div>
+
+            <div class="main-modal-content" contentname="Information" style="display: none">
+                <h1>Information</h1>
+            </div>
         </div>
     </div>
 
