@@ -1,0 +1,15 @@
+{
+    "name": "smart-lock-ui",
+    "version": "1.0.0",
+    "description": "Samsung Smart Lock UI for Windows",
+    "main": "renderer.js",
+    "scripts": {
+        "start": "electron ."
+    },
+    "author": "Danny",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/electron": "^1.6.10",
+        "electron": "^18.0.4"
+    }
+}
