@@ -75,6 +75,14 @@ class SmartLock {
 
         this.mainIOT = 'https://iot.samsung-ihp.com:8088'
         this.loginPath = 'openhome/v10/user/login'
+
+        this.loginResponse = {
+            authCode: "",
+            authToken: "",
+            memberId: "",
+            message: "",
+            result: true
+        }
     }
 
 
@@ -90,15 +98,15 @@ class SmartLock {
             hashData: utilities.randomAlphanumeric(128), //128 char random alphanumeric
             imei: utilities.randomIMEI(), //Can be random
             locale: "en", //Locale 
-            locationAgreeYn: "N",
+            locationAgreeYn: "N", //T&C Agreement (Possibly?)
             loginId: "", //Username
             mobileNum: "",
-            osTypeCd: "IOS",
-            osVer: "15.0",
-            overwrite: true,
+            osTypeCd: "IOS", //Phone Type
+            osVer: "15.0", //Phone Version
+            overwrite: true, //Unsure
             pushToken: utilities.randomAlphanumeric(64), //64 char random alphanumeric
-            pwd: "", //Hashed in SHA512
-            timeZone: 10
+            pwd: "", //Password hashed in SHA512
+            timeZone: 10 //Timezone
         }
 
         loginObject.loginId = $('#login-account-id').val()
@@ -108,27 +116,27 @@ class SmartLock {
 
         const headers = {
             'Accept': '*/*',
-            'Authorization': 'CUL',
-            //'User-Agent': 'SmartDoorLock_Global/2.0.21 (com.samsung.sds.global.doorlock.dlis; build:129; iOS 14.2.0) Alamofire/5.0.5'
+            'Authorization': 'CUL'
+                /* Axios won't let me set a user agent, but the API doesn't care so I guess it's ok
+                'User-Agent': 'SmartDoorLock_Global/2.0.21 (com.samsung.sds.global.doorlock.dlis; build:129; iOS 14.2.0) Alamofire/5.0.5' */
         }
 
-        let response = await axios.put(`${this.mainIOT}/${this.loginPath}`, loginObject, { headers })
+        try {
+            let response = await axios.put(`${this.mainIOT}/${this.loginPath}`, loginObject, { headers })
 
-        logger.logObject('Axios Response', response, 'SmartLock')
+            this.loginResponse = response.data
 
-        /*  Response Example 
+            logger.logObject('Axios Object', response, 'SmartLock')
+            logger.logObject('Axios Response', this.loginResponse, 'SmartLock')
 
-        var responseExample = {
-            authCode: "",
-            authToken: "",
-            memberId: "",
-            message: "",
-            result: true
+            logger.log('Successfully logged into account.', 'SmartLock')
+
+
+        } catch (exception) {
+            logger.log(`There was an error logging in: ${exception} | Password may be incorrect, or you have hit a rate limit.`, "SmartLock")
+
+
         }
-        
-        */
-
-
     }
 }
 
