@@ -20,6 +20,7 @@
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"></script>
 
     <script>
         if (window.module) module = window.module
@@ -31,7 +32,6 @@
 
 
     <div class="top-bar">
-
         <div class="top-bar-title-flex">
             <i class="bi bi-door-open"></i>
             <span>Samsung Smart Lock UI</span>
@@ -51,31 +51,45 @@
     <div class="main-content">
         <div class="main-content-top">
             <i class="bi bi-list" id="side-menu-button"></i>
+            <i class="bi bi-person-circle" id="account-menu-button"></i>
         </div>
-
 
         <div class="door-controller-wrapper">
             <div class="door-controller-animation"></div>
-            <div class="door-controller">Unlock</div>
+            <div class="door-controller">
+                <i class="bi bi-lock" id="door-controller-status-icon"></i>
+                <span class="door-controller-status-text">Locked</span>
+            </div>
 
         </div>
-
-
     </div>
 
     <div class="dialog-flex" style="pointer-events: none; opacity: 0;">
         <div class="dark-overlay"></div>
 
-        <div class="modal">
+        <div class="modal" modalname="smartlock" style="pointer-events: none; opacity: 0;">
             <div class="modal-title">Smart Lock</div>
             <div class="main-modal-navigation">
-                <div class="main-modal-navitem">Account</div>
+                <div class="main-modal-navitem">Login</div>
                 <div class="main-modal-navitem">Settings</div>
                 <div class="main-modal-navitem">Information</div>
             </div>
 
-            <div class="main-modal-content" contentname="Account">
+            <div class="main-modal-content" contentname="Login">
 
+                <div class="text-box-wrapper">
+                    <div class="text-box-title">Account ID</div>
+                    <input type="text" class="text-box" id="login-account-id" value="" placeholder="Your account ID..." size="25"></input>
+                </div>
+
+                <div class="text-box-wrapper">
+                    <div class="text-box-title">Password</div>
+                    <input type="password" class="text-box" id="login-account-password" value="" placeholder="Your account password..." size="28"></input>
+                </div>
+
+                <div class="select-button" id="login-account-button">Login</div>
+
+                <div class="login-status normal-text">Not Logged In</div>
             </div>
 
             <div class="main-modal-content" contentname="Settings" style="display: none">
@@ -85,6 +99,10 @@
             <div class="main-modal-content" contentname="Information" style="display: none">
                 <h1>Information</h1>
             </div>
+        </div>
+
+        <div class="modal" modalname="account" style="pointer-events: none; opacity: 0;">
+            <div class="modal-title">Account</div>
         </div>
     </div>
 

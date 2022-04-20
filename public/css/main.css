@@ -86,15 +86,27 @@ html {
     background-color: red;
 }
 
-#side-menu-button {
+#side-menu-button,
+#account-menu-button {
     color: white;
     font-size: 30px;
     line-height: 0 !important;
     transition: 0.2s all;
     cursor: pointer;
+    flex: 1;
+    text-align: left;
 }
 
-#side-menu-button:hover {
+#side-menu-button {
+    text-align: left;
+}
+
+#account-menu-button {
+    text-align: right;
+}
+
+#side-menu-button:hover,
+#account-menu-button:hover {
     color: #222;
 }
 
@@ -119,12 +131,14 @@ html {
     display: flex;
     flex-direction: column;
     z-index: 500;
+    position: absolute;
+    transition: 0.2s all;
 }
 
 .modal-title {
     font-size: 20px;
     color: white;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid var(--main-color);
     padding: 15px;
 }
 
@@ -144,7 +158,7 @@ html {
 .main-modal-navigation {
     display: flex;
     flex-direction: row;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid var(--main-color);
 }
 
 .main-modal-navitem {
@@ -166,41 +180,51 @@ html {
     height: 50px;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
     align-items: center;
-}
-
-.door-controller-animation {
-    width: 260px;
-    height: 260px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    background-color: red;
-    background: conic-gradient( #CECEFF, #4242FF, #CECEFF);
-    animation: spin 1.5s infinite linear;
 }
 
 .door-controller {
     position: absolute;
-    width: 250px;
-    height: 250px;
+    width: 220px;
+    height: 220px;
     border-radius: 50%;
-    background-color: #6F6FFF;
+    background-color: #333;
     font-size: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: inset 1px 0px 13px 5px #000048;
+    flex-direction: column;
     color: white;
-    font-weight: bold;
     transition: 0.2s all;
     cursor: pointer;
+    box-shadow: 1px 5px 17px -7px #000000;
+    animation-name: scale;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    -webkit-font-smoothing: subpixel-antialiased;
 }
 
 .door-controller:hover {
-    transform: scale(0.9);
+    color: #555;
+}
+
+.door-controller-animation {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    box-shadow: 4px 4px 40px 20px #CB97FF, -4px -4px 40px 20px #35E4F2;
+    animation-name: rotate;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+.main-modal-content {
+    padding: 20px;
+}
+
+.door-controller-status-text {
+    margin-top: 10px;
+    border-top: 1px solid white;
 }
 
 .door-controller-wrapper {
@@ -211,8 +235,84 @@ html {
     height: calc(100% - 50px);
 }
 
-@keyframes spin {
-    100% {
-        transform: rotate(-360deg);
+@keyframes scale {
+    0% {
+        transform: scale(1);
     }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.text-box-title {
+    color: white;
+    font-size: 15px;
+    margin-right: 10px;
+    text-align: left;
+}
+
+.text-box {
+    border: 1px solid var(--main-color);
+    outline: none;
+    padding: 10px;
+    border-radius: 20px;
+    color: white;
+    background-color: #333;
+    transition: 0.2s all;
+}
+
+.text-box:hover {
+    background-color: #444;
+}
+
+.text-box-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.select-button {
+    padding: 10px;
+    background-color: #333;
+    text-align: center;
+    border-radius: 20px;
+    border: 1px solid var(--main-color);
+    transition: 0.2s all;
+    color: white;
+    cursor: pointer;
+}
+
+.select-button:hover {
+    background-color: #444;
+}
+
+.normal-text {
+    font-size: 15px;
+    color: white;
+}
+
+.login-status {
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+    color: red;
+}
+
+#login-account-button {
+    width: 100%;
+    margin-top: 50px;
 }
