@@ -316,3 +316,28 @@ html {
     width: 100%;
     margin-top: 50px;
 }
+
+.notification-bar {
+    position: absolute;
+    background-color: #333;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    padding: 15px;
+    align-items: center;
+    color: white;
+    transition: 0.2s all;
+}
+
+.notification-wrapper {
+    z-index: 9999;
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}

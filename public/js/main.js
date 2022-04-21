@@ -1,5 +1,7 @@
 const ipcRenderer = window.require('electron').ipcRenderer
 const crypto = window.require('crypto')
+const async = require('async')
+
 
 class Frontend {
 
@@ -53,6 +55,8 @@ class Frontend {
 
         $('#account-menu-button').on('click', function() {
             enableModal('account')
+
+
         })
 
         $('.dark-overlay').on('click', function() {
@@ -64,6 +68,10 @@ class Frontend {
             $('.main-modal-content').toggle(false)
 
             $(`.main-modal-content[contentname='${$(this).html()}']`).toggle(true)
+        })
+
+        $('.door-controller-wrapper').on('click', async function() {
+            logger.log('Changing door state', 'Frontend')
         })
     }
 }
@@ -77,9 +85,9 @@ class SmartLock {
         this.loginPath = 'openhome/v10/user/login'
 
         this.loginResponse = {
-            authCode: "",
-            authToken: "",
-            memberId: "",
+            authCode: "", //Base 64 Encoded (Is valid for roughly 30-40 minutes, not sure real time)
+            authToken: "", //Second Auth (Need this)
+            memberId: "", //Users UUID
             message: "",
             result: true
         }
@@ -135,7 +143,7 @@ class SmartLock {
         } catch (exception) {
             logger.log(`There was an error logging in: ${exception} | Password may be incorrect, or you have hit a rate limit.`, "SmartLock")
 
-
+            logger.showNotification("Your password or username was incorrect.")
         }
     }
 }
@@ -175,12 +183,30 @@ class Utilities {
     getRandomArbitrary(min, max) {
         return Math.floor(Math.random() * (max - min) + min);
     }
+
+    timeout(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 }
 
 class Logger {
 
     constructor() {
         this.currentDate = new Date()
+
+        this.notificationQueue = async.queue((task, callback) => {
+
+            logger.log(`Processing task: ${task}`, 'Notification Queue')
+
+            $('.notification-bar').html(task)
+            $('.notification-bar').css('bottom', '0px')
+
+            setTimeout(function() {
+                $('.notification-bar').css('bottom', '-70px')
+
+                callback()
+            }, 2000);
+        }, 1)
     }
 
     currentDateText() {
@@ -193,6 +219,16 @@ class Logger {
 
     logObject(text, object, prefix) {
         console.log(`[${this.currentDateText()}][${prefix}]: ${text}`, object)
+    }
+
+    async showNotification(notificationText) {
+        this.notificationQueue.push(notificationText, (err) => {
+            if (err) {
+                console.log(`An error occurred while processing task ${notificationText} | ${err}`)
+            } else {
+                console.log(`Finished processing task ${notificationText}.`)
+            }
+        })
     }
 }
 
