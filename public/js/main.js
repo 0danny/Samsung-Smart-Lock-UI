@@ -26,41 +26,41 @@ class Frontend {
         })
     }
 
+    enableModal(modalName) {
+        logger.log(`Enabling a new modal: ${modalName}`, 'Frontend')
+
+        $('.dialog-flex').css('pointer-events', 'all')
+        $('.dialog-flex').css('opacity', '1')
+
+        //Fail safe, incase somehow another modal is open while we are trying to open a new one.
+        $('.modal').css('pointer-events', 'none')
+        $('.modal').css('opacity', '0')
+
+        $(`.modal[modalname='${modalName}']`).css('pointer-events', 'all')
+        $(`.modal[modalname='${modalName}']`).css('opacity', '1')
+    }
+
+    disableModals() {
+        $('.dialog-flex').css('pointer-events', 'none')
+        $('.dialog-flex').css('opacity', '0')
+
+        $('.modal').css('pointer-events', 'none')
+        $('.modal').css('opacity', '0')
+    }
+
+
     modalController() {
-        var enableModal = function(modalName) {
-            logger.log(`Enabling a new modal: ${modalName}`, 'Frontend')
-
-            $('.dialog-flex').css('pointer-events', 'all')
-            $('.dialog-flex').css('opacity', '1')
-
-            //Fail safe, incase somehow another modal is open while we are trying to open a new one.
-            $('.modal').css('pointer-events', 'none')
-            $('.modal').css('opacity', '0')
-
-            $(`.modal[modalname='${modalName}']`).css('pointer-events', 'all')
-            $(`.modal[modalname='${modalName}']`).css('opacity', '1')
-        }
-
-        var disableModals = function() {
-            $('.dialog-flex').css('pointer-events', 'none')
-            $('.dialog-flex').css('opacity', '0')
-
-            $('.modal').css('pointer-events', 'none')
-            $('.modal').css('opacity', '0')
-        }
 
         $('#side-menu-button').on('click', function() {
-            enableModal('smartlock')
+            frontend.enableModal('smartlock')
         })
 
         $('#account-menu-button').on('click', function() {
-            enableModal('account')
-
-
+            frontend.enableModal('account')
         })
 
         $('.dark-overlay').on('click', function() {
-            disableModals()
+            frontend.disableModals()
         })
 
         //Navigation Containers
@@ -91,8 +91,26 @@ class SmartLock {
             message: "",
             result: true
         }
+
+        this.userInfo = {}
     }
 
+    async GETwithHeaders(url) {
+        const headers = {
+            'Accept': '*/*',
+            'Authorization': `CUL ${this.loginResponse.authToken}`,
+            'AuthCode': this.loginResponse.authCode
+        }
+
+        try {
+            let response = await axios.get(url, { headers })
+
+            return response.data
+        } catch {
+            logger.showNotification(`There was an error fetching: ${url}`)
+            return null
+        }
+    }
 
     async login() {
 
@@ -122,6 +140,8 @@ class SmartLock {
 
         logger.logObject("Login Object", loginObject, "SmartLock")
 
+        $('.login-status').css('color', 'orange').html('Attempting to Login...')
+
         const headers = {
             'Accept': '*/*',
             'Authorization': 'CUL'
@@ -134,17 +154,49 @@ class SmartLock {
 
             this.loginResponse = response.data
 
-            logger.logObject('Axios Object', response, 'SmartLock')
-            logger.logObject('Axios Response', this.loginResponse, 'SmartLock')
+            logger.logObject('Login Axios Object', response, 'SmartLock')
+            logger.logObject('Login Response', this.loginResponse, 'SmartLock')
 
             logger.log('Successfully logged into account.', 'SmartLock')
 
+            $('.login-status').css('color', 'lightgreen').html('Logged In')
+
+            let userInfoResponse = await this.GETwithHeaders(`${this.mainIOT}/openhome/v20/usermgmt/getusrinfo?createDate=${utilities.timestamp()}&hashData=&memberId=${this.loginResponse.memberId}`)
+
+            this.userInfo = userInfoResponse
+
+            logger.logObject('User Info Request', userInfoResponse, 'SmartLock')
+
+            this.setUserInformation()
+
+            frontend.disableModals()
+
+            frontend.enableModal('account')
+
+            $('#login-account-button').css('pointer-events', 'none')
 
         } catch (exception) {
             logger.log(`There was an error logging in: ${exception} | Password may be incorrect, or you have hit a rate limit.`, "SmartLock")
 
             logger.showNotification("Your password or username was incorrect.")
+
+            $('.login-status').css('color', 'red').html('Not Logged In')
         }
+    }
+
+    async setUserInformation() {
+        //Get User Profile Pic
+        let profilePicData = await this.GETwithHeaders(`${this.mainIOT}/openhome/v20/usermgmt/reqdownloadurl?reqUrl=${this.userInfo.memberVO.pictureUrl}`)
+
+        logger.logObject('Got profile pic data', profilePicData, 'SmartLock')
+
+        $('.account-profile-pic').attr('src', profilePicData.downloadUrl)
+        $('.account-profile-name').html(this.userInfo.memberVO.memberNm)
+
+        $('.account-phone').html(`Phone Number: ${this.userInfo.memberVO.mobileNum}`)
+        $('.account-pwdExpiry').html(`Password Expiry: ${this.userInfo.memberVO.pwdExpireDt}`)
+        $('.account-country').html(`Country: ${this.userInfo.memberVO.countryCd}`)
+        $('.account-member-id').html(`Member ID: ${this.userInfo.memberVO.memberId}`)
     }
 }
 

@@ -341,3 +341,33 @@ html {
     height: 100%;
     pointer-events: none;
 }
+
+.account-profile-pic {
+    margin: 15px;
+    height: 100px;
+    width: auto;
+    border-radius: 50%;
+    background-size: cover;
+}
+
+.account-profile-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid var(--main-color);
+}
+
+.account-profile-name {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.account-information-wrapper {
+    padding: 20px;
+}
+
+.account-information-wrapper div {
+    margin-bottom: 5px;
+}
